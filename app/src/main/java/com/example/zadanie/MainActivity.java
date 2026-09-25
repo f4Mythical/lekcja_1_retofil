@@ -1,6 +1,9 @@
 package com.example.zadanie;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +23,15 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        ini();
+    }
+    private void ini(){
+        TextView title = findViewById(R.id.tvTitle);
+        RadioButton A = findViewById(R.id.rBAnswerA);
+        RadioButton B = findViewById(R.id.rBAnswerB);
+        RadioButton C = findViewById(R.id.rBAnswerC);
+        RadioButton D = findViewById(R.id.rBAnswerD);
+        Button send = findViewById(R.id.btnSend);
     }
 }
 // https://my-json-server.typicode.com/f4Mythical/json
