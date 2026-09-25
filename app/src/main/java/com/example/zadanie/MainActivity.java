@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,8 +12,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.material.button.MaterialButton;
 
+public class MainActivity extends AppCompatActivity {
+    private TextView tvTitle;
+    private RadioButton A, B, C, D;
+    private MaterialButton btnSend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,14 +29,15 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         ini();
+
     }
     private void ini(){
-        TextView title = findViewById(R.id.tvTitle);
-        RadioButton A = findViewById(R.id.rBAnswerA);
-        RadioButton B = findViewById(R.id.rBAnswerB);
-        RadioButton C = findViewById(R.id.rBAnswerC);
-        RadioButton D = findViewById(R.id.rBAnswerD);
-        Button send = findViewById(R.id.btnSend);
+         tvTitle = findViewById(R.id.tvTitle);
+         A = findViewById(R.id.rBAnswerA);
+         B = findViewById(R.id.rBAnswerB);
+         C = findViewById(R.id.rBAnswerC);
+         D = findViewById(R.id.rBAnswerD);
+         btnSend = findViewById(R.id.btnSend);
     }
 }
 // https://my-json-server.typicode.com/f4Mythical/json
