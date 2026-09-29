@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.io.Console;
 import java.util.List;
 
 import retrofit2.Call;
@@ -28,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup radioGroupPytania;
     private RadioButton A, B, C, D;
     private MaterialButton btnSend;
-    List<Pytanie>  pytaniaZInternetu;
+    List<Pytanie> pytaniaZInternetu;
+    private int numerPytania = 0;
+    private int poprawne = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,13 +43,39 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         ini();
+
+        wyswieltPytanie(numerPytania);
+
+        btnSend.setOnClickListener(view -> {
+            sprawdzOdpowiedz();
+            if(numerPytania<pytaniaZInternetu.size()-1) {
+                numerPytania++;
+                wyswieltPytanie(numerPytania);
+            }else {
+                koniecOdpowiedzi();
+            }
+
+        });
+
+    }
+    private void ini(){
+        tvTitle = findViewById(R.id.tvTitle);
+        A = findViewById(R.id.rBAnswerA);
+        B = findViewById(R.id.rBAnswerB);
+        C = findViewById(R.id.rBAnswerC);
+        D = findViewById(R.id.rBAnswerD);
+        btnSend = findViewById(R.id.btnSend);
+        radioGroupPytania = findViewById(R.id.radioGroupPytania);
+    }
+    private void wyswieltPytanie(int numerPytania){
+        radioGroupPytania.clearCheck();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://my-json-server.typicode.com/f4Mythical/json/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<List<Pytanie>> call = jsonPlaceHolderApi.getPytania();
         // powinno byc execute
+        Call<List<Pytanie>> call = jsonPlaceHolderApi.getPytania();
         call.enqueue(
                 new Callback<List<Pytanie>>() {
                     @Override
@@ -57,7 +86,11 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
                         pytaniaZInternetu = response.body();
-                        tvTitle.setText(pytaniaZInternetu.get(0).getTresc());
+                        tvTitle.setText(pytaniaZInternetu.get(numerPytania).getTresc());
+                        A.setText(pytaniaZInternetu.get(numerPytania).getOdpA());
+                        B.setText(pytaniaZInternetu.get(numerPytania).getOdpB());
+                        C.setText(pytaniaZInternetu.get(numerPytania).getOdpC());
+                        D.setText(pytaniaZInternetu.get(numerPytania).getOdpD());
                     }
 
                     @Override
@@ -66,15 +99,41 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
     }
-    private void ini(){
-         tvTitle = findViewById(R.id.tvTitle);
-         A = findViewById(R.id.rBAnswerA);
-         B = findViewById(R.id.rBAnswerB);
-         C = findViewById(R.id.rBAnswerC);
-         D = findViewById(R.id.rBAnswerD);
-         btnSend = findViewById(R.id.btnSend);
-        radioGroupPytania = findViewById(R.id.radioGroupPytania);
+    private void sprawdzOdpowiedz(){
+        int checkedId = radioGroupPytania.getCheckedRadioButtonId();
+        if(checkedId == -1){
+            Toast.makeText(this, "Brak odpowiedzi", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int wybranyIndeks = 0;
+        if (checkedId == R.id.rBAnswerA) {
+            wybranyIndeks = 1;
+        } else if (checkedId == R.id.rBAnswerB) {
+            wybranyIndeks = 2;
+        } else if (checkedId == R.id.rBAnswerC) {
+            wybranyIndeks = 3;
+        } else if (checkedId == R.id.rBAnswerD) {
+            wybranyIndeks = 4;
+        }
+
+        int poprawnaOdpowiedz = pytaniaZInternetu.get(numerPytania).getPoprawna();
+
+        if (wybranyIndeks == poprawnaOdpowiedz) {
+            poprawne++;
+        }
+
+    }
+    private void koniecOdpowiedzi(){
+        tvTitle.setText("Koniec pytan. Twój wynik to: " + poprawne + "/" + pytaniaZInternetu.size());
+        A.setVisibility(TextView.GONE);
+        B.setVisibility(TextView.GONE);
+        C.setVisibility(TextView.GONE);
+        D.setVisibility(TextView.GONE);
+        btnSend.setVisibility(TextView.GONE);
+        radioGroupPytania.setVisibility(TextView.GONE);
+
     }
 }
 // https://my-json-server.typicode.com/f4Mythical/json
