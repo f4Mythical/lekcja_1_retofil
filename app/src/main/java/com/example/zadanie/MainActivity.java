@@ -3,6 +3,7 @@ package com.example.zadanie;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity {
     private TextView tvTitle;
+    private RadioGroup radioGroupPytania;
     private RadioButton A, B, C, D;
     private MaterialButton btnSend;
     @Override
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
          C = findViewById(R.id.rBAnswerC);
          D = findViewById(R.id.rBAnswerD);
          btnSend = findViewById(R.id.btnSend);
+        radioGroupPytania = findViewById(R.id.radioGroupPytania);
     }
 }
 // https://my-json-server.typicode.com/f4Mythical/json
