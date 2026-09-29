@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.Console;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -25,11 +26,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView tvTitle;
+    private TextView tvTitle, tvWynik;
     private RadioGroup radioGroupPytania;
     private RadioButton A, B, C, D;
     private MaterialButton btnSend;
     List<Pytanie> pytaniaZInternetu;
+    private List<Integer> odpowiedzi = new ArrayList<>();
     private int numerPytania = 0;
     private int poprawne = 0;
     @Override
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         D = findViewById(R.id.rBAnswerD);
         btnSend = findViewById(R.id.btnSend);
         radioGroupPytania = findViewById(R.id.radioGroupPytania);
+        tvWynik = findViewById(R.id.tvWynik);
     }
     private void wyswieltPytanie(int numerPytania){
         radioGroupPytania.clearCheck();
@@ -118,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
             wybranyIndeks = 4;
         }
 
+        odpowiedzi.add(wybranyIndeks);
+
         int poprawnaOdpowiedz = pytaniaZInternetu.get(numerPytania).getPoprawna();
 
         if (wybranyIndeks == poprawnaOdpowiedz) {
@@ -133,7 +138,21 @@ public class MainActivity extends AppCompatActivity {
         D.setVisibility(TextView.GONE);
         btnSend.setVisibility(TextView.GONE);
         radioGroupPytania.setVisibility(TextView.GONE);
-
+        String[] tablicaPoprawnychWynikow = new String[pytaniaZInternetu.size()];
+        StringBuilder wynikBuilder = new StringBuilder();
+        for (int i = 0; i < pytaniaZInternetu.size(); i++) {
+            boolean dobrze = i < odpowiedzi.size() && odpowiedzi.get(i) == pytaniaZInternetu.get(i).getPoprawna();
+            String status;
+            if (dobrze) {
+                status = "Dobrze";
+            } else {
+                status = "Źle";
+            }
+            tablicaPoprawnychWynikow[i] = pytaniaZInternetu.get(i).getTresc() + " - " + status;
+            wynikBuilder.append(tablicaPoprawnychWynikow[i]).append("\n");
+        }
+        tvWynik.setText(wynikBuilder.toString());
+        tvWynik.setTextColor(poprawne == pytaniaZInternetu.size() ? android.graphics.Color.GREEN : android.graphics.Color.RED);
     }
 }
 // https://my-json-server.typicode.com/f4Mythical/json
